@@ -32,5 +32,3 @@ npm start
 cd backend
 python main.py
 ```
-
-The frontend runs on `http://localhost:3000` and the backend runs on `http://127.0.0.1:5000`.
