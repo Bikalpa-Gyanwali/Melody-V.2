@@ -4,11 +4,11 @@ import { HomePage } from './components/HomePage';
 import AdminPanel from './components/AdminPanel';
 
 const LoginScreen = ({ onLogin }) => (
-  <div className="relative min-h-screen overflow-hidden bg-[#07111f]">
+  <div className="relative min-h-screen overflow-hidden bg-[#06101c]">
     <div className="absolute inset-0 aurora-shell" />
-    <div className="absolute left-[-10%] top-[-8%] h-72 w-72 rounded-full bg-cyan-500/20 blur-3xl" />
-    <div className="absolute bottom-[-10%] right-[-8%] h-80 w-80 rounded-full bg-amber-400/15 blur-3xl" />
-    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.08),transparent_40%)]" />
+    <div className="absolute left-[-12%] top-[-8%] h-80 w-80 rounded-full bg-cyan-500/14 blur-3xl" />
+    <div className="absolute bottom-[-10%] right-[-8%] h-96 w-96 rounded-full bg-amber-300/10 blur-3xl" />
+    <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.05),transparent_38%)]" />
     <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-10">
       <AuthForms onLogin={onLogin} />
     </div>

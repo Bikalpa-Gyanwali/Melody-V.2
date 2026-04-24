@@ -1,11 +1,5 @@
 import React, { useState } from 'react';
 
-const featureBadges = [
-  'Mood-driven playlists',
-  'Instant recommendations',
-  'Camera-based vibe scan'
-];
-
 const AuthForms = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
@@ -113,7 +107,7 @@ const AuthForms = ({ onLogin }) => {
 
         localStorage.setItem('melody-auth', JSON.stringify(storageData));
         sessionStorage.setItem('melody-user', JSON.stringify(userData));
-        setMessage('Welcome back. Your mix is ready.');
+        setMessage('Welcome back.');
 
         if (onLogin) {
           onLogin(userData);
@@ -139,61 +133,33 @@ const AuthForms = ({ onLogin }) => {
   };
 
   return (
-    <div className="grid w-full max-w-6xl gap-8 lg:grid-cols-[1.1fr_0.9fr]">
-      <section className="glass-panel relative overflow-hidden p-8 md:p-12">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(45,212,191,0.16),transparent_34%),radial-gradient(circle_at_bottom_right,rgba(251,191,36,0.14),transparent_30%)]" />
-        <div className="relative z-10">
-          <p className="capsule-chip mb-6">Melody Music experience</p>
-          <h1 className="max-w-xl font-display text-5xl font-semibold leading-tight text-white md:text-6xl">
-            Let your mood build the soundtrack.
-          </h1>
-          <p className="mt-5 max-w-xl text-lg text-slate-300">
-            A more cinematic music dashboard with mood scans, smart mixes, and a playlist flow
-            that feels like a real product instead of a demo.
-          </p>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            {featureBadges.map((badge) => (
-              <span key={badge} className="rounded-full border border-white/10 bg-white/6 px-4 py-2 text-sm text-slate-200">
-                {badge}
-              </span>
-            ))}
-          </div>
-
-          <div className="mt-10 grid gap-4 md:grid-cols-3">
-            <div className="rounded-3xl border border-white/10 bg-[#0d1728]/80 p-5">
-              <p className="text-xs uppercase tracking-[0.3em] text-cyan-300/70">Daily spark</p>
-              <p className="mt-3 font-display text-3xl text-white">18</p>
-              <p className="mt-2 text-sm text-slate-400">Featured tracks ready to match your energy.</p>
-            </div>
-            <div className="rounded-3xl border border-white/10 bg-[#0d1728]/80 p-5">
-              <p className="text-xs uppercase tracking-[0.3em] text-amber-300/70">Mood scan</p>
-              <p className="mt-3 font-display text-3xl text-white">Live</p>
-              <p className="mt-2 text-sm text-slate-400">Face-based emotion cues mapped into a listening lane.</p>
-            </div>
-            <div className="rounded-3xl border border-white/10 bg-[#0d1728]/80 p-5">
-              <p className="text-xs uppercase tracking-[0.3em] text-emerald-300/70">Smart memory</p>
-              <p className="mt-3 font-display text-3xl text-white">Local</p>
-              <p className="mt-2 text-sm text-slate-400">Likes and playlists persist per user in the browser.</p>
-            </div>
-          </div>
-        </div>
+    <div className="landing-shell grid w-full max-w-6xl gap-10 lg:grid-cols-[1fr_460px] lg:items-center">
+      <section className="landing-copy">
+        <p className="capsule-chip mb-6">Melody Music</p>
+        <h1 className="font-display text-5xl leading-[0.95] text-white md:text-7xl">
+          Music that moves with your mood.
+        </h1>
+        <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">
+          A cleaner music room for mood-based discovery, better playback, and playlists that stay with you.
+        </p>
       </section>
 
-      <section className="glass-panel p-8 md:p-10">
+      <section className="landing-panel">
         <div className="mb-8">
-          <p className="capsule-chip mb-4">{isLogin ? 'Welcome back' : 'Create your account'}</p>
-          <h2 className="font-display text-4xl text-white">
-            {isLogin ? 'Step into your mix.' : 'Start your listening room.'}
+          <p className="text-xs uppercase tracking-[0.32em] text-slate-400">
+            {isLogin ? 'Welcome back' : 'Create account'}
+          </p>
+          <h2 className="mt-3 font-display text-4xl text-white">
+            {isLogin ? 'Get in the Music.' : 'Start your listening room.'}
           </h2>
           <p className="mt-3 text-slate-400">
             {isLogin
-              ? 'Sign in to open your saved likes, playlists, and recommendations.'
-              : 'Register once and the app will keep your session ready for the dashboard.'}
+              ? 'Sign in to open your saved playlists, likes, and music picks.'
+              : 'Register once and keep your music space ready across sessions.'}
           </p>
         </div>
 
-        <div className="mb-8 grid grid-cols-2 gap-3 rounded-2xl bg-white/5 p-2">
+        <div className="mb-8 grid grid-cols-2 gap-2 rounded-2xl bg-white/5 p-2">
           <button
             type="button"
             onClick={() => setIsLogin(true)}
@@ -264,7 +230,7 @@ const AuthForms = ({ onLogin }) => {
             disabled={isSubmitting}
             className="w-full rounded-2xl bg-[linear-gradient(135deg,#f7d06b_0%,#7ce3d7_100%)] px-6 py-4 font-semibold text-slate-950 transition hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isSubmitting ? (isLogin ? 'Logging in...' : 'Creating account...') : isLogin ? 'Open My Mix' : 'Create Account'}
+            {isSubmitting ? (isLogin ? 'Logging in...' : 'Creating account...') : isLogin ? 'Get in the Music' : 'Create Account'}
           </button>
         </form>
 

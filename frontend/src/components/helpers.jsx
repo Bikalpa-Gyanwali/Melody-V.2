@@ -61,6 +61,14 @@ const formatTime = (value) => {
   return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 };
 
+const sliderStyle = (value, max) => {
+  const safeMax = max > 0 ? max : 1;
+  const percentage = Math.min(Math.max((value / safeMax) * 100, 0), 100);
+  return {
+    backgroundImage: `linear-gradient(90deg, #7ce3d7 0%, #f7d06b ${percentage}%, rgba(255,255,255,0.12) ${percentage}%, rgba(255,255,255,0.12) 100%)`
+  };
+};
+
 const SongCardComponent = ({ song, onPlay, onLike, onAddToPlaylist, isLiked, isPlaying }) => (
   <article className={`song-tile group ${isPlaying ? 'song-tile-active' : ''}`}>
     <div className="relative overflow-hidden rounded-[28px]">
@@ -127,7 +135,6 @@ export const SongCard = memo(SongCardComponent);
 export const Player = memo(function Player({
   currentSong,
   isPlaying,
-  progress,
   currentTime,
   duration,
   volume,
@@ -147,7 +154,7 @@ export const Player = memo(function Player({
     <div className="fixed bottom-4 left-1/2 z-50 w-[calc(100%-1.5rem)] max-w-6xl -translate-x-1/2 rounded-[36px] border border-white/10 bg-[#07101b]/92 p-4 shadow-[0_30px_80px_rgba(2,6,23,0.55)] backdrop-blur-2xl md:p-5">
       <div className="absolute inset-x-12 top-0 h-px bg-[linear-gradient(90deg,transparent,rgba(124,227,215,0.7),transparent)]" />
       <div className="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        <div className="flex items-center gap-4 lg:w-[27%]">
+        <div className="flex items-center gap-4 lg:w-[28%]">
           <img
             src={currentSong.cover}
             alt={currentSong.title}
@@ -164,7 +171,7 @@ export const Player = memo(function Player({
           </div>
         </div>
 
-        <div className="lg:w-[46%]">
+        <div className="lg:w-[52%]">
           <div className="mb-3 flex items-center justify-center gap-5">
             <button type="button" onClick={onPrev} className="player-control text-slate-200">
               <SkipBackIcon />
@@ -186,19 +193,18 @@ export const Player = memo(function Player({
               value={Math.min(currentTime, duration || 0)}
               onChange={(event) => onSeek(Number(event.target.value))}
               className="player-slider w-full"
+              style={sliderStyle(currentTime, duration)}
             />
             <div className="flex items-center justify-between text-xs text-slate-400">
               <span>{formatTime(currentTime)}</span>
-              <span>{Math.round(progress)}% played</span>
               <span>{formatTime(duration)}</span>
             </div>
           </div>
         </div>
 
-        <div className="grid gap-3 lg:w-[23%]">
+        <div className="lg:w-[16%]">
           <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-            <p className="text-xs uppercase tracking-[0.3em] text-slate-400">Volume</p>
-            <div className="mt-3 flex items-center gap-3">
+            <div className="flex items-center gap-3">
               <span className="text-slate-300">
                 <VolumeIcon muted={muted} />
               </span>
@@ -210,13 +216,9 @@ export const Player = memo(function Player({
                 value={volume}
                 onChange={(event) => onVolumeChange(Number(event.target.value))}
                 className="player-slider w-full"
+                style={sliderStyle(volume, 1)}
               />
-              <span className="w-10 text-right text-xs text-slate-400">{Math.round(volume * 100)}</span>
             </div>
-          </div>
-          <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">
-            <p className="font-medium text-white">Playback studio</p>
-            <p className="mt-1 text-slate-400">Drag the timeline to jump anywhere in the track and set your own listening level.</p>
           </div>
         </div>
       </div>

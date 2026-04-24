@@ -11,51 +11,30 @@ const LogoutIcon = () => (
   </svg>
 );
 
-const PlaylistSpark = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M12 3L13.76 8.24L19 10L13.76 11.76L12 17L10.24 11.76L5 10L10.24 8.24L12 3Z" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-  </svg>
-);
-
 const moodMeta = {
   happy: {
-    accent: 'from-amber-300/35 via-orange-300/18 to-transparent',
-    ring: 'ring-amber-200/40',
-    badge: 'Golden current',
-    panel: 'from-[#1c1822] to-[#101829]'
+    accent: 'from-amber-300/35 via-orange-300/18 to-transparent'
   },
   sad: {
-    accent: 'from-sky-300/28 via-blue-400/16 to-transparent',
-    ring: 'ring-sky-200/40',
-    badge: 'Night tide',
-    panel: 'from-[#101b30] to-[#0b1424]'
+    accent: 'from-sky-300/28 via-blue-400/16 to-transparent'
   },
   energetic: {
-    accent: 'from-rose-300/28 via-orange-300/20 to-transparent',
-    ring: 'ring-rose-200/40',
-    badge: 'Voltage lane',
-    panel: 'from-[#25131c] to-[#151120]'
+    accent: 'from-rose-300/28 via-orange-300/20 to-transparent'
   },
   calm: {
-    accent: 'from-emerald-300/28 via-cyan-300/14 to-transparent',
-    ring: 'ring-emerald-200/40',
-    badge: 'Low tide',
-    panel: 'from-[#0e1d20] to-[#0a151b]'
+    accent: 'from-emerald-300/28 via-cyan-300/14 to-transparent'
   },
   focus: {
-    accent: 'from-violet-300/28 via-indigo-300/16 to-transparent',
-    ring: 'ring-violet-200/40',
-    badge: 'Signal lock',
-    panel: 'from-[#171628] to-[#0e1422]'
+    accent: 'from-violet-300/28 via-indigo-300/16 to-transparent'
   }
 };
 
 const sectionTitle = {
-  happy: 'Bright picks for your happy streak',
-  sad: 'Gentle tracks for a reflective mood',
-  energetic: 'Fuel-up tracks for high momentum',
-  calm: 'Slow-burn songs for a softer room',
-  focus: 'Stay-on-task tracks for deep work'
+  happy: 'Happy picks',
+  sad: 'Sad picks',
+  energetic: 'Energy picks',
+  calm: 'Calm picks',
+  focus: 'Focus picks'
 };
 
 const formatMood = (mood) => mood.charAt(0).toUpperCase() + mood.slice(1);
@@ -64,7 +43,6 @@ const fallbackPlaylistName = 'First Light Mix';
 const Section = React.memo(function Section({
   eyebrow,
   title,
-  caption,
   songs,
   likedSongs,
   currentSongId,
@@ -79,12 +57,11 @@ const Section = React.memo(function Section({
 
   return (
     <section className="section-shell space-y-5">
-      <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between">
+      <div className="flex items-end justify-between gap-4">
         <div>
           <p className="text-xs uppercase tracking-[0.32em] text-slate-400">{eyebrow}</p>
           <h2 className="mt-2 font-display text-3xl text-white">{title}</h2>
         </div>
-        {caption && <p className="max-w-xl text-sm text-slate-400">{caption}</p>}
       </div>
       <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
         {songs.map((song) => (
@@ -108,7 +85,6 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
   const [activeMood, setActiveMood] = useState('happy');
   const [currentSong, setCurrentSong] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.72);
@@ -178,7 +154,6 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
 
   useEffect(() => {
     if (currentSong) {
-      setProgress(0);
       setCurrentTime(0);
       setDuration(0);
     }
@@ -311,20 +286,10 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
     [activeMood, allSongs]
   );
 
-  const stats = useMemo(
-    () => [
-      { label: 'Liked songs', value: likedSongs.size.toString().padStart(2, '0') },
-      { label: 'Playlists', value: playlists.length.toString().padStart(2, '0') },
-      { label: 'Mood matches', value: filteredSongs.length.toString().padStart(2, '0') },
-      { label: 'Smart recs', value: String(userBasedRecs.length + itemBasedRecs.length).padStart(2, '0') }
-    ],
-    [filteredSongs.length, itemBasedRecs.length, likedSongs.size, playlists.length, userBasedRecs.length]
-  );
-
   const selectedPlaylist = playlists.find((playlist) => playlist.id === selectedPlaylistId) || playlists[0] || null;
   const moodInfo = moodMeta[activeMood] || moodMeta.happy;
   const heroSong = currentSong || filteredSongs[0] || allSongs[0];
-  const quickPicks = useMemo(() => filteredSongs.slice(0, 6), [filteredSongs]);
+  const quickPicks = useMemo(() => filteredSongs.slice(0, 8), [filteredSongs]);
   const trendingSongs = useMemo(() => allSongs.slice(0, 8), [allSongs]);
   const playlistSongs = useMemo(() => {
     if (!selectedPlaylist) {
@@ -447,11 +412,8 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
 
   const handleTimeUpdate = useCallback(() => {
     if (audioRef.current) {
-      const nextCurrentTime = audioRef.current.currentTime;
-      const nextDuration = audioRef.current.duration || 0;
-      setCurrentTime(nextCurrentTime);
-      setDuration(nextDuration);
-      setProgress(nextDuration ? (nextCurrentTime / nextDuration) * 100 : 0);
+      setCurrentTime(audioRef.current.currentTime);
+      setDuration(audioRef.current.duration || 0);
     }
   }, []);
 
@@ -468,8 +430,7 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
     }
     audioRef.current.currentTime = value;
     setCurrentTime(value);
-    setProgress(duration ? (value / duration) * 100 : 0);
-  }, [duration]);
+  }, []);
 
   const handleVolumeChange = useCallback((value) => {
     setVolume(value);
@@ -477,30 +438,39 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050d17] pb-40">
-      <div className={`absolute inset-x-0 top-0 h-[36rem] bg-gradient-to-br ${moodInfo.accent}`} />
+      <div className={`absolute inset-x-0 top-0 h-[18rem] bg-gradient-to-br ${moodInfo.accent}`} />
       <div className="absolute left-[-6rem] top-6 h-96 w-96 rounded-full bg-cyan-400/10 blur-3xl" />
-      <div className="absolute right-[-9rem] top-44 h-[28rem] w-[28rem] rounded-full bg-amber-300/10 blur-3xl" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.06),transparent_40%)]" />
+      <div className="absolute right-[-9rem] top-20 h-[24rem] w-[24rem] rounded-full bg-amber-300/10 blur-3xl" />
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 py-6 md:px-8 md:py-8">
-        <header className="glass-panel mb-8 flex flex-col gap-6 p-6 md:flex-row md:items-center md:justify-between">
+      <div className="relative z-10 mx-auto max-w-[1500px] px-4 py-6 md:px-8 md:py-8">
+        <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="capsule-chip mb-4">Listening room</p>
-            <h1 className="font-display text-4xl text-white md:text-5xl">Melody Music</h1>
-            <p className="mt-3 max-w-2xl text-slate-300">
-              Welcome back, <span className="text-white">{user.username}</span>. The room is tuned for{' '}
-              <span className="text-amber-200">{formatMood(activeMood)}</span>, with live playback controls and cleaner discovery.
-            </p>
+            <p className="capsule-chip mb-3">Melody Music</p>
+            <h1 className="font-display text-4xl text-white md:text-5xl">Welcome back, {user.username}</h1>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
+            {Object.keys(moodMeta).map((mood) => (
+              <button
+                key={mood}
+                type="button"
+                onClick={() => setActiveMood(mood)}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                  activeMood === mood
+                    ? 'bg-white text-slate-950 shadow-lg'
+                    : 'border border-white/10 bg-white/6 text-slate-200 hover:bg-white/10'
+                }`}
+              >
+                {formatMood(mood)}
+              </button>
+            ))}
             {onManageSongs && user.username === 'admin' && (
               <button
                 type="button"
                 onClick={onManageSongs}
                 className="rounded-2xl border border-white/10 bg-white/8 px-5 py-3 text-sm text-slate-100 transition hover:bg-white/12"
               >
-                Open Admin Panel
+                Admin
               </button>
             )}
             <button
@@ -513,177 +483,80 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
           </div>
         </header>
 
-        <section className={`glass-panel mb-8 overflow-hidden p-6 md:p-8 ${moodInfo.ring}`}>
-          <div className="grid gap-8 xl:grid-cols-[1.2fr_0.8fr]">
+        <section className="section-shell mb-8">
+          <div className="mb-6 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="capsule-chip mb-5">{moodInfo.badge}</p>
-              <h2 className="max-w-2xl font-display text-4xl leading-tight text-white md:text-5xl">
-                {sectionTitle[activeMood] || 'Mood-led songs for right now'}
-              </h2>
-              <p className="mt-4 max-w-2xl text-lg text-slate-300">
-                I tightened the layout so it feels more like a focused listening room and less like stacked cards. Your mood, stats, spotlight track, and scan controls now read as one system.
-              </p>
-
-              <div className="mt-8 grid gap-4 md:grid-cols-4">
-                {stats.map((stat) => (
-                  <div key={stat.label} className={`rounded-[28px] border border-white/10 bg-gradient-to-br ${moodInfo.panel} p-5 shadow-[0_14px_35px_rgba(2,6,23,0.22)]`}>
-                    <p className="text-xs uppercase tracking-[0.28em] text-slate-400">{stat.label}</p>
-                    <p className="mt-4 font-display text-4xl text-white">{stat.value}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                {Object.keys(moodMeta).map((mood) => (
-                  <button
-                    key={mood}
-                    type="button"
-                    onClick={() => setActiveMood(mood)}
-                    className={`rounded-full px-5 py-3 text-sm font-medium transition ${
-                      activeMood === mood
-                        ? 'bg-white text-slate-950 shadow-lg'
-                        : 'border border-white/10 bg-white/6 text-slate-200 hover:bg-white/10'
-                    }`}
-                  >
-                    {formatMood(mood)}
-                  </button>
-                ))}
-              </div>
+              <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Music first</p>
+              <h2 className="mt-2 font-display text-3xl text-white">{sectionTitle[activeMood]}</h2>
             </div>
+            {heroSong && (
+              <button
+                type="button"
+                onClick={() => handlePlay(heroSong)}
+                className="rounded-2xl bg-[linear-gradient(135deg,#f7d06b_0%,#7ce3d7_100%)] px-5 py-3 text-sm font-medium text-slate-950 transition hover:scale-[1.01]"
+              >
+                {isPlaying && currentSong?.id === heroSong.id ? 'Pause current pick' : `Play ${heroSong.title}`}
+              </button>
+            )}
+          </div>
 
-            <div className="space-y-5">
-              <div className="hero-spotlight rounded-[30px] border border-white/10 p-5">
-                <p className="text-xs uppercase tracking-[0.32em] text-cyan-300/70">Spotlight</p>
-                {heroSong ? (
-                  <>
-                    <div className="mt-4 flex items-center gap-4">
-                      <img
-                        src={heroSong.cover}
-                        alt={heroSong.title}
-                        className="h-24 w-24 rounded-[26px] object-cover shadow-lg"
-                        onError={(event) => {
-                          event.target.onerror = null;
-                          event.target.src = 'https://placehold.co/300x300/122033/e2e8f0?text=Music';
-                        }}
-                      />
-                      <div className="min-w-0">
-                        <h3 className="truncate font-display text-3xl text-white">{heroSong.title}</h3>
-                        <p className="truncate text-slate-300">{heroSong.artist}</p>
-                        <div className="mt-3 flex flex-wrap gap-2">
-                          {heroSong.moods.slice(0, 3).map((mood) => (
-                            <span key={`${heroSong.id}-${mood}`} className="rounded-full bg-white/8 px-3 py-1 text-xs text-slate-200">
-                              {mood}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-5 grid gap-3 sm:grid-cols-2">
-                      <button
-                        type="button"
-                        onClick={() => handlePlay(heroSong)}
-                        className="rounded-2xl bg-[linear-gradient(135deg,#f7d06b_0%,#7ce3d7_100%)] px-5 py-3 font-medium text-slate-950 transition hover:scale-[1.01]"
-                      >
-                        {isPlaying && currentSong?.id === heroSong.id ? 'Pause spotlight' : 'Play spotlight'}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => addSongToPlaylist(heroSong.id)}
-                        className="rounded-2xl border border-white/10 bg-white/8 px-5 py-3 font-medium text-slate-100 transition hover:bg-white/12"
-                      >
-                        Save to playlist
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <p className="mt-3 text-slate-400">No songs available yet.</p>
-                )}
-              </div>
-
-              <MoodDetector onMoodSelect={setActiveMood} />
-            </div>
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {quickPicks.map((song) => (
+              <SongCard
+                key={`quick-${song.id}`}
+                song={song}
+                onPlay={handlePlay}
+                onLike={toggleLikeSong}
+                onAddToPlaylist={addSongToPlaylist}
+                isLiked={likedSongs.has(song.id)}
+                isPlaying={isPlaying && currentSong?.id === song.id}
+              />
+            ))}
           </div>
         </section>
 
-        <section className="mb-8 grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
-          <div className="glass-panel p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Playlist lab</p>
-                <h2 className="mt-2 font-display text-3xl text-white">Shape your own lane</h2>
-              </div>
-              <div className="rounded-full bg-amber-300/15 p-3 text-amber-200">
-                <PlaylistSpark />
-              </div>
-            </div>
+        <section className="mb-8 grid gap-6 xl:grid-cols-[0.85fr_1.15fr]">
+          <div className="section-shell">
+            <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Utilities</p>
+            <div className="mt-5 space-y-5">
+              <MoodDetector onMoodSelect={setActiveMood} />
 
-            <form onSubmit={createPlaylist} className="mt-6 flex flex-col gap-3 md:flex-row">
-              <input
-                type="text"
-                value={playlistName}
-                onChange={(event) => setPlaylistName(event.target.value)}
-                placeholder="Create a playlist name"
-                className="auth-input md:flex-1"
-              />
-              <button
-                type="submit"
-                className="rounded-2xl bg-white px-5 py-3 font-medium text-slate-950 transition hover:bg-slate-100"
-              >
-                Create
-              </button>
-            </form>
+              <div className="rounded-[28px] border border-white/10 bg-white/4 p-5">
+                <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Playlists</p>
+                <form onSubmit={createPlaylist} className="mt-4 flex flex-col gap-3">
+                  <input
+                    type="text"
+                    value={playlistName}
+                    onChange={(event) => setPlaylistName(event.target.value)}
+                    placeholder="Create a playlist name"
+                    className="auth-input"
+                  />
+                  <button
+                    type="submit"
+                    className="rounded-2xl bg-white px-5 py-3 font-medium text-slate-950 transition hover:bg-slate-100"
+                  >
+                    Create playlist
+                  </button>
+                </form>
 
-            {queueMessage && (
-              <div className="mt-4 rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-sm text-slate-200">
-                {queueMessage}
-              </div>
-            )}
-
-            <div className="mt-6 space-y-3">
-              {playlists.length === 0 && (
-                <div className="rounded-[24px] border border-dashed border-white/12 bg-white/4 p-5 text-sm text-slate-400">
-                  Create a playlist, then use the add button on any song card to build a custom collection.
-                </div>
-              )}
-
-              {playlists.map((playlist) => (
-                <button
-                  key={playlist.id}
-                  type="button"
-                  onClick={() => setSelectedPlaylistId(playlist.id)}
-                  className={`w-full rounded-[24px] border px-4 py-4 text-left transition ${
-                    selectedPlaylist?.id === playlist.id
-                      ? 'border-amber-200/40 bg-amber-300/10 text-white'
-                      : 'border-white/10 bg-white/4 text-slate-300 hover:bg-white/8'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium">{playlist.name}</p>
-                      <p className="mt-1 text-sm text-slate-400">{playlist.songs.length} songs saved</p>
-                    </div>
-                    <span className="rounded-full bg-black/20 px-3 py-1 text-xs uppercase tracking-[0.25em]">
-                      Ready
-                    </span>
+                {queueMessage && (
+                  <div className="mt-4 rounded-2xl border border-white/10 bg-white/6 px-4 py-3 text-sm text-slate-200">
+                    {queueMessage}
                   </div>
-                </button>
-              ))}
+                )}
+              </div>
             </div>
           </div>
 
-          <div className="glass-panel p-6">
+          <div className="section-shell">
             <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Current playlist</p>
             <h2 className="mt-2 font-display text-3xl text-white">
               {selectedPlaylist ? selectedPlaylist.name : 'No playlist selected'}
             </h2>
-            <p className="mt-3 text-slate-400">
-              Use the add button on any song card to push tracks into the currently active playlist.
-            </p>
-
             <div className="mt-6 grid gap-3">
               {playlistSongs.length === 0 && (
                 <div className="rounded-[24px] border border-dashed border-white/12 bg-white/4 p-5 text-sm text-slate-400">
-                  Your selected playlist is empty right now. Add a few tracks to make this space come alive.
+                  Add a few songs to your active playlist from the music cards above.
                 </div>
               )}
 
@@ -717,22 +590,8 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
 
         <div className="space-y-10">
           <Section
-            eyebrow="Mood picks"
-            title={sectionTitle[activeMood]}
-            caption="These tracks are filtered directly from the active mood lane."
-            songs={quickPicks}
-            likedSongs={likedSongs}
-            currentSongId={currentSong?.id}
-            isPlaying={isPlaying}
-            onPlay={handlePlay}
-            onLike={toggleLikeSong}
-            onAddToPlaylist={addSongToPlaylist}
-          />
-
-          <Section
             eyebrow="For you"
             title="Recommended from your likes"
-            caption="Content-based recommendations driven by your saved likes and similarity data."
             songs={userBasedRecs}
             likedSongs={likedSongs}
             currentSongId={currentSong?.id}
@@ -745,7 +604,6 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
           <Section
             eyebrow="Because you played"
             title={currentSong ? `More like ${currentSong.title}` : 'Play a song to unlock lookalikes'}
-            caption="This row updates when you start listening to any track."
             songs={itemBasedRecs}
             likedSongs={likedSongs}
             currentSongId={currentSong?.id}
@@ -756,9 +614,8 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
           />
 
           <Section
-            eyebrow="Crowd signal"
-            title="Listeners also liked"
-            caption="Collaborative picks surfaced from like overlap stored in the browser."
+            eyebrow="Listeners also liked"
+            title="Community picks"
             songs={collaborativeRecs}
             likedSongs={likedSongs}
             currentSongId={currentSong?.id}
@@ -769,9 +626,8 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
           />
 
           <Section
-            eyebrow="Trending shelf"
-            title="Featured songs"
-            caption="A broader grid of songs to explore when you want to move beyond the active mood."
+            eyebrow="Featured"
+            title="More songs"
             songs={trendingSongs}
             likedSongs={likedSongs}
             currentSongId={currentSong?.id}
@@ -786,7 +642,6 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
       <Player
         currentSong={currentSong}
         isPlaying={isPlaying}
-        progress={progress}
         currentTime={currentTime}
         duration={duration}
         volume={volume}
