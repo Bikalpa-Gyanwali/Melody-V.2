@@ -144,7 +144,7 @@ def main():
         song_data[source_filename]['similar_songs'] = top_similar
 
 
-    # --- 5. PRINT THE FINAL REPORT ---
+    # --- 5. NOW PRINT THE FINAL REPORT ---
     for filename, data in song_data.items():
         print("="*50)
         print(f"Song: {filename}")
