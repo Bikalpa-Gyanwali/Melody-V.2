@@ -11,7 +11,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-change-this'
 CORS(app)
 
-# database setup
+# Database setup
 def init_db():
     conn = sqlite3.connect('users.db')
     cursor = conn.cursor()
