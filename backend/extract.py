@@ -32,7 +32,7 @@ for fname in os.listdir(SONG_FOLDER):
             })
             print(f"..✅.. {fname}")
         except Exception as e:
-            print(f"..❌.. {fname}: {e}")
+            print(f".❌.. {fname}: {e}")
             traceback.print_exc()
 
 # Save vectors
