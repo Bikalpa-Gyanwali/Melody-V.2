@@ -443,27 +443,37 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
       <div className="absolute right-[-9rem] top-20 h-[24rem] w-[24rem] rounded-full bg-amber-300/10 blur-3xl" />
 
       <div className="relative z-10 mx-auto max-w-[1500px] px-4 py-6 md:px-8 md:py-8">
-        <header className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+        <header className="dashboard-header flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <p className="capsule-chip mb-3">Melody Music</p>
-            <h1 className="font-display text-4xl text-white md:text-5xl">Welcome back, {user.username}</h1>
+            <div className="flex items-center gap-3">
+              <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-[linear-gradient(135deg,#7ce3d7_0%,#f7d06b_100%)] text-lg font-bold text-slate-950">
+                M
+              </span>
+              <div>
+                <p className="text-xs uppercase tracking-[0.32em] text-cyan-200/75">Melody Music</p>
+                <h1 className="mt-1 font-display text-2xl text-white md:text-3xl">Welcome back, {user.username}</h1>
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
-            {Object.keys(moodMeta).map((mood) => (
-              <button
-                key={mood}
-                type="button"
-                onClick={() => setActiveMood(mood)}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition ${
-                  activeMood === mood
-                    ? 'bg-white text-slate-950 shadow-lg'
-                    : 'border border-white/10 bg-white/6 text-slate-200 hover:bg-white/10'
-                }`}
-              >
-                {formatMood(mood)}
-              </button>
-            ))}
+            <div className="mood-switcher">
+              {Object.keys(moodMeta).map((mood) => (
+                <button
+                  key={mood}
+                  type="button"
+                  onClick={() => setActiveMood(mood)}
+                  aria-pressed={activeMood === mood}
+                  className={`rounded-full px-4 py-2 text-sm font-medium transition ${
+                    activeMood === mood
+                      ? 'bg-white text-slate-950 shadow-lg'
+                      : 'text-slate-300 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  {formatMood(mood)}
+                </button>
+              ))}
+            </div>
             {onManageSongs && user.username === 'admin' && (
               <button
                 type="button"
@@ -483,7 +493,7 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
           </div>
         </header>
 
-        <section className="section-shell mb-8">
+        <section className="section-shell hero-section mb-8">
           <div className="mb-6 flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.32em] text-slate-400">Music first</p>
