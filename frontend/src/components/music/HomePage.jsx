@@ -88,6 +88,8 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const [volume, setVolume] = useState(0.72);
+  const [lastVolume, setLastVolume] = useState(0.72);
+  const [isMuted, setIsMuted] = useState(false);
   const [likedSongs, setLikedSongs] = useState(new Set());
   const [playlists, setPlaylists] = useState([]);
   const [similarityData, setSimilarityData] = useState(null);
@@ -433,8 +435,27 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
   }, []);
 
   const handleVolumeChange = useCallback((value) => {
+    const nextMuted = value <= 0.01;
     setVolume(value);
+    setIsMuted(nextMuted);
+    if (!nextMuted) {
+      setLastVolume(value);
+    }
   }, []);
+
+  const handleToggleMute = useCallback(() => {
+    if (isMuted) {
+      const restoredVolume = lastVolume > 0 ? lastVolume : 0.72;
+      setVolume(restoredVolume);
+      setIsMuted(false);
+      setLastVolume(restoredVolume);
+      return;
+    }
+
+    setLastVolume(volume > 0 ? volume : 0.72);
+    setVolume(0);
+    setIsMuted(true);
+  }, [isMuted, lastVolume, volume]);
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050d17] pb-40">
@@ -655,11 +676,13 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
         currentTime={currentTime}
         duration={duration}
         volume={volume}
+        isMuted={isMuted}
         onPlayPause={handlePlayPause}
         onNext={handleNext}
         onPrev={handlePrev}
         onSeek={handleSeek}
         onVolumeChange={handleVolumeChange}
+        onToggleMute={handleToggleMute}
       />
       {currentSong && (
         <audio
