@@ -460,9 +460,10 @@ export const HomePage = ({ user, onLogout, onManageSongs }) => {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050d17] pb-40">
       <div className={`absolute inset-x-0 top-0 h-[18rem] bg-gradient-to-br ${moodInfo.accent}`} />
-      <div className="absolute left-[-6rem] top-6 h-96 w-96 rounded-full bg-cyan-400/10 blur-3xl" />
-      <div className="absolute right-[-9rem] top-20 h-[24rem] w-[24rem] rounded-full bg-amber-300/10 blur-3xl" />
-
+      <div className="absolute left-[-6rem] top-6 h-96 w-96 rounded-full bg-cyan-400/10 blur-3xl floating-blob" />
+      <div className="absolute right-[-9rem] top-20 h-[24rem] w-[24rem] rounded-full bg-amber-300/10 blur-3xl floating-blob animate-float-slow" />
+      <div className="absolute inset-x-0 top-24 mx-auto h-80 w-80 rounded-full bg-violet-400/5 blur-3xl animate-float-slower" />
+ 
       <div className="relative z-10 mx-auto max-w-[1500px] px-4 py-6 md:px-8 md:py-8">
         <header className="dashboard-header flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
