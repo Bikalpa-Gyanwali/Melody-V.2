@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { loadCustomSongs, saveCustomSongs } from './data';
+import { loadCustomSongs, saveCustomSongs } from '../music/data';
 
 const emptySong = { title: '', artist: '', genre: '', moods: '', filename: '' };
 

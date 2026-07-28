@@ -138,17 +138,19 @@ export const Player = memo(function Player({
   currentTime,
   duration,
   volume,
+  isMuted,
   onPlayPause,
   onNext,
   onPrev,
   onSeek,
-  onVolumeChange
+  onVolumeChange,
+  onToggleMute
 }) {
   if (!currentSong) {
     return null;
   }
 
-  const muted = volume <= 0.01;
+  const muted = isMuted || volume <= 0.01;
 
   return (
     <div className="fixed bottom-4 left-1/2 z-50 w-[calc(100%-1.5rem)] max-w-6xl -translate-x-1/2 rounded-[36px] border border-white/10 bg-[#07101b]/92 p-4 shadow-[0_30px_80px_rgba(2,6,23,0.55)] backdrop-blur-2xl md:p-5">
@@ -203,11 +205,17 @@ export const Player = memo(function Player({
         </div>
 
         <div className="lg:w-[16%]">
-          <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-            <div className="flex items-center gap-3">
-              <span className="text-slate-300">
-                <VolumeIcon muted={muted} />
-              </span>
+          <div className="volume-control">
+            <button
+              type="button"
+              onClick={onToggleMute}
+              className={`volume-toggle ${muted ? 'volume-toggle-muted' : ''}`}
+              aria-label={muted ? 'Unmute audio' : 'Mute audio'}
+              data-muted={muted}
+            >
+              <VolumeIcon muted={muted} />
+            </button>
+            <div className="flex-1">
               <input
                 type="range"
                 min="0"

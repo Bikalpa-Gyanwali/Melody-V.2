@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import AuthForms from './components/auth';
-import { HomePage } from './components/HomePage';
-import AdminPanel from './components/AdminPanel';
+import AuthForms from './components/auth/auth';
+import { HomePage } from './components/music/HomePage';
+import AdminPanel from './components/admin/AdminPanel';
 
 const LoginScreen = ({ onLogin }) => (
   <div className="relative min-h-screen overflow-hidden bg-[#06101c]">
